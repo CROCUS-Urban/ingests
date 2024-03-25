@@ -126,8 +126,12 @@ def ingest_wxt(st):
 
     vals10xr = xr.Dataset.from_dataframe(vals10)
     vals10xr = vals10xr.sortby('time')
+
+    # Assign metadata information for entire dataset and individual variables
     vals10xr = vals10xr.assign_attrs(global_attrs)
-    
+    for varname in var_attrs.keys():
+        valsxr[varname] = valsxr[varname].assign_attrs(var_attrs[varname])
+
     vals10xr.to_netcdf(fname)
 
 lag_time = timedelta(days=16)
