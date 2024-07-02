@@ -201,28 +201,29 @@ if __name__ == '__main__':
                            'units' : 'degrees'},
                     'rainfall': {'standard_name' : 'precipitation_amount',
                            'units' : 'kg m-2'}}
+    # Use the current day by default
+    current =  datetime.datetime.now(datetime.timezone.utc)
 
-    
     #Parsing the command line
     
     parser = argparse.ArgumentParser(description='Optional app description')
     
-    parser.add_argument('ndays', type=int,
+    parser.add_argument('--ndays', type=int, default=1,
                     help='number of days to ingest')
     
-    parser.add_argument('y', type=int,
+    parser.add_argument('--y', type=int, default=current.year,
                     help='Year start')
     
-    parser.add_argument('m', type=int,
+    parser.add_argument('--m', type=int, default=current.month,
                     help='Month start')
     
-    parser.add_argument('d', type=int,
+    parser.add_argument('--d', type=int, default=current.day,
                     help='day start')
     
-    parser.add_argument('site', type=str,
+    parser.add_argument('--site', type=str,
                     help='CROCUS Site')
 
-    parser.add_argument('odir', type=str,
+    parser.add_argument('--odir', type=str,
                     help='Out directory (must exist)')
 
     args = parser.parse_args()
