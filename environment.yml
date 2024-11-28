@@ -2,7 +2,7 @@ name: ingests-dev
 channels:
   - conda-forge
 dependencies:
-  - python
+  - python<3.12
   - numpy
   - scipy
   - xarray

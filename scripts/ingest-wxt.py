@@ -190,20 +190,29 @@ if __name__ == '__main__':
     wxt_global_UIC = {'conventions': "CF 1.10",
                       'WSN':'W096',
                       'site_ID' : "UIC",
-                      'CAMS_tag' : "CMS-WXT-011",
+                      'CAMS_tag' : "CMS-WXT-",
                       'datastream' : "CMS_wxt536_UIC_a1",
-                      'plugin' : "10.31.81.1:5000/local/waggle-wxt536.*",
+                      'plugin' : "registry.sagecontinuum.org/jrobrien/waggle-wxt536:0.*",
                       'datalevel' : "a1",
                       'latitude' : 41.869407936,
                       'longitude' : -87.645806251}
-    
+    wxt_global_CCI = {'conventions': "CF 1.10",
+                      'WSN':'W08B',
+                      'site_ID' : "NEIU_CCIS",
+                      'CAMS_tag' : "CMS-WXT-013",
+                      'datastream' : "CMS_wxt536_NEIU_CCICS_a1",
+                      'plugin' : "registry.sagecontinuum.org/jrobrien/waggle-wxt536:0.*",
+                      'datalevel' : "a1",
+                      'latitude' : 41.823038311,
+                      'longitude' : -87.609379028}
     #put these in a dictionary for accessing
     
     global_sites = {'NU' : wxt_global_NU, 
                     'CSU': wxt_global_CSU,
                     'NEIU' : wxt_global_NEIU,
                     'ATMOS': wxt_global_ATMOS,
-                    'UIC': wxt_global_UIC}
+                    'UIC': wxt_global_UIC,
+                    'NEIU_CCICS': wxt_global_CCI}
     
     
     #Variable attributes
