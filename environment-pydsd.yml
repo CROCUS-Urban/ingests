@@ -1,0 +1,15 @@
+name: ingests-pydsd
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - numpy
+  - scipy
+  - xarray
+  - matplotlib
+  - netcdf4
+  - pydsd
+  - numpy
+  - pip
+  - pip:
+    - sage-data-client
