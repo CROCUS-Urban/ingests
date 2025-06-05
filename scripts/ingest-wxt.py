@@ -172,7 +172,7 @@ if __name__ == '__main__':
                       'site_ID' : "CSU",
                       'CAMS_tag' : "CMS-WXT-003",
                       'datastream' : "CMS_wxt536_CSU_a1",
-                      'plugin' : "local/waggle-wxt536",
+                      'plugin' : "registry.sagecontinuum.org/jrobrien/waggle-wxt536:0.*",
                       'datalevel' : "a1",
                       'latitude' : 41.71996846,
                       'longitude' : -87.612805717}
