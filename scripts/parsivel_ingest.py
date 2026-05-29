@@ -9,6 +9,7 @@ import sage_data_client
 from netCDF4 import num2date, date2num
 from ArgonneParsivelReader import read_adm_parsivel
 from datetime import datetime, timedelta
+from distributed import Client, LocalCluster
 
 def filter_spectrum_with_parsivel_matrix(
     dsd,
@@ -102,23 +103,25 @@ def process_parsivel(day, radar_frequency=None, node="W09A", username="", passwo
         )
     print(df_files)
     ds_list = []
-    for filename in df_files["value"]:
+    #for filename in df_files["value"]:
+    def get_psd(filename):
         response = requests.get(filename, auth=(username, password))
+        base, name = os.path.split(filename)
         if response.status_code == 200:
             # Save the file locally
-            with open("temp.csv", "wb") as file:
+            with open(name, "wb") as file:
                 file.write(response.content)
 
         base, name = os.path.split(filename)
 
-        my_dsd = read_adm_parsivel("temp.csv")
+        my_dsd = read_adm_parsivel(name)
         print("PSD read in")
         # MRR2 Frequency is 24 Ghz
         # W-band is 95 Ghz
 
         if len(my_dsd.Nd["data"]) == 0:
             print("Empty file, skipping.")
-            continue
+            return None
         
         my_dsd.Nd["data"] = np.where(my_dsd.Nd["data"] == -9.999, np.nan,
                 my_dsd.Nd["data"])
@@ -183,8 +186,14 @@ def process_parsivel(day, radar_frequency=None, node="W09A", username="", passwo
         out_ds.attrs['mentor_orcids'] = "0000-0003-4655-6912, 0000-0003-2518-1234"
         out_ds.attrs['contributors'] = "Scott Collis, Paytsar Muradyan, Max Grover, Matt Tuftedal"
         out_ds["time"] = out_ds["time"].astype("datetime64[s]")
-        ds_list.append(out_ds)
-        os.remove("temp.csv")
+        os.remove(name)
+        return out_ds
+
+    with Client(LocalCluster(n_workers=16)) as c:
+        futures = c.map(get_psd, df_files["value"])
+        ds_list = c.gather(futures)
+        ds_list = [x for x in ds_list if x is not None]
+
     out_ds = xr.concat(ds_list, dim='time').sortby("time")
     return out_ds
 
