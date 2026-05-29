@@ -6,6 +6,7 @@ dependencies:
   - numpy
   - scipy
   - xarray
+  - xradar
   - matplotlib
   - netcdf4
   - pillow

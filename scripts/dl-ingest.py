@@ -12,13 +12,13 @@ import cmweather
 from glob import glob
 from datetime import datetime, timedelta
 
-DEFAULT_SOURCE_PATH = '/nfs/gce/projects/crocus/data/staging_raw_data/NEIU-AGES-plus-deployment/Proc'
-DEFAULT_OUTPUT_PATH = '/nfs/gce/projects/crocus/data/staging_raw_data/NEIU-AGES-plus-deployment/netcdf'
-DEFAULT_QUICKLOOKS_PATH = '/nfs/gce/projects/crocus/data/staging_raw_data/NEIU-AGES-plus-deployment/quicklooks'
+DEFAULT_SOURCE_PATH = '/nfs/gce/projects/crocus/data/ingested-data/field-campaigns/crocus-rainfall/sparc-dl/raw'
+DEFAULT_OUTPUT_PATH = '/nfs/gce/projects/crocus/data/ingested-data/field-campaigns/crocus-rainfall/sparc-dl/netcdf'
+DEFAULT_QUICKLOOKS_PATH = '/nfs/gce/projects/crocus/data/ingested-data/field-campaigns/crocus-rainfall/sparc-dl/quicklooks'
 
-neiu_lat = 41.98054
-neiu_lon = -87.71700
-neiu_alt = 176.5
+neiu_lat = 41.8231
+neiu_lon = -87.6093
+neiu_alt = 170.
 
 '''
 Import of StreamLine .hpl (txt) files and save locally in directory. Therefore
@@ -165,7 +165,7 @@ def read_as_netcdf(file, lat, lon, alt, n_sweeps=1):
     ds["altitude"].attrs["_FillValue"] = np.nan
     num_rays = ds.dims['time']
     ds.attrs["Conventions"] = "CF-1.7"
-    ds.attrs["version"] = "R0"
+    ds.attrs["version"] = "a0"
     ds.attrs["mentor"] = "Bobby Jackson"
     ds.attrs['mentor_email'] = "rjackson@anl.gov"
     ds.attrs['mentor_institution'] = 'Argonne National Laboratory'
@@ -212,7 +212,7 @@ if __name__ == "__main__":
         if(len(time) == 2):
             time = time + "0000"
         ds.attrs["scan_type"] = scan_type
-        out_name = 'dl.ages.%s.%s.r0.nc' % (date, time)
+        out_name = 'crocus-rainfall-sparc.dl.%s.%s.%s.a0.nc' % (date, time, scan_type)
     
         dest_path = os.path.join(args.dest_path, date)
         if not os.path.exists(dest_path):

@@ -23,6 +23,8 @@ def read_adm_parsivel(filename):
     """
     reader = ArgonneParsivelReader(filename)
     dsd = DropSizeDistribution(reader)
+    dsd.fields["drop_spectrum"] = reader.fields["filtered_raw_matrix"]
+    dsd.spectrum_fall_velocity = reader.spectrum_fall_velocity
     return dsd
 
 
@@ -161,7 +163,7 @@ class ArgonneParsivelReader(object):
         )
         self.fields["Nd"] = var_to_dict(
             "Nd",
-            np.ma.masked_equal(self.nd, np.power(10, -9.999)),
+            np.ma.masked_equal(10**np.array(self.nd), np.power(10, -9.999)),
             "m^-3 mm^-1",
             "Liquid water particle concentration",
         )
@@ -170,11 +172,10 @@ class ArgonneParsivelReader(object):
         len_raw = len(self.raw)
         self.fields["raw"] = var_to_dict(
             "Raw",
-            np.reshape(np.array(self.raw), (len_raw, 32, 32)),
+            np.reshape(np.array(self.raw), (len_raw, 32, 32)).sum(axis=1),    
             "",
             "Raw data",
         )
-        
         self.fields["num_particles"] = var_to_dict(
             "Number of Particles",
             np.ma.array(self.num_particles),
@@ -213,7 +214,7 @@ class ArgonneParsivelReader(object):
         )
         self.fields["sensor_heating_temperature"] = var_to_dict(
             "Sensor heating temperature",
-            np.ma.array(self.sensor_head_heating_current),
+            np.ma.array(self.sensor_heating_temperature),
             "degC",
             "Sensor heating temperature",
         )
@@ -230,13 +231,13 @@ class ArgonneParsivelReader(object):
             "Temperature left head",
         )
         
-        self.fields["terminal_velocity"] = var_to_dict(
-            "Terminal Fall Velocity",
+        self.spectrum_fall_velocity = var_to_dict(
+            "Fall velocity spectra",
             np.array(
                 self.vd
             ),  
             "m/s",
-            "Terminal fall velocity for each bin",
+            "Fall velocity spectra",
         )
         self.fields["sensor_time"] = var_to_dict(
             "Sensor time",
